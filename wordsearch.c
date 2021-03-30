@@ -2,10 +2,25 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+//Own personal using C++ structures
+// #include <LinkedList.h>
+#include "HashTable.c"
+////////////////////////////////////
+
 // Declarations of the two functions you will implement
 // Feel free to declare any helper functions
 void printPuzzle(char** arr, int n);
 void searchPuzzle(char** arr, int n, char** list, int listSize);
+
+int compareString(char* stringOne, char* stringTwo);
+
+int horizontalRightSweep(char** list, char* target, int size);
+int horizontalLeftSweep(char** list, char* target, int size);
+int verticalUpSweep(char** list, char* target, int size);
+int verticalDownSweep(char** list, char* target, int size);
+
+
 
 // Main function, DO NOT MODIFY (except line 52 if your output is not as expected -- see the comment there)!!!	
 int main(int argc, char **argv) {
@@ -95,5 +110,76 @@ void printPuzzle(char** arr, int n) {
 void searchPuzzle(char** arr, int n, char** list, int listSize) {
 	// This function checks if arr contains words from list. If a word appears in arr, it will print out that word and then convert that word entry in arr into lower case.
 	// Your implementation here
+	long i;
+	long j;
+	long k;
+
+	char **listOfWordsFound = (char **)malloc(listSize * sizeof(char)); 
+
+	for(i = 0; i < n; i++){
+		// char* temp = (char *)malloc ((n-i) * sizeof(char));
+		char* temp;
+		temp = (*(arr + 14) + i);
+		printf("Result of temp with lengh(%ld): %s\n", strlen(temp),temp);
+
+		for(j = 0; j < strlen(temp); j++){
+			char *tempTwo;
+			long size = strlen(temp) - j;
+
+			tempTwo = (char*)malloc(size * sizeof(char));
+			// tempTwo = (char*)malloc((size-1) * sizeof(char));
+
+
+			for(k = 0; k < size; k++){
+				*(tempTwo + k) = *(temp + k);
+			}
+			*(tempTwo + k) = '\0';
+			compareString(tempTwo,"florida");
+			// for(i = 0; i < (long)(listSize); i++){
+			// 	if(compareString(tempTwo,*(list + i))){
+			// 		// printf("Word found: %s", tempTwo);
+			// 	}
+			// }
+			
+			printf("String of second temp: %s\n", (tempTwo));
+			// printf("Size of second temp: %ld\n", strlen(tempTwo));
+
+		}
+
+	}
+
+
+
+}
+
+
+int compareString(char* stringOne, char* stringTwo){
+    // printf("String One of length(%ld): %s\n", strlen(stringOne),stringOne);
+    // printf("String Two of length(%ld): %s\n", strlen(stringTwo),stringTwo);
+
+	
+	int test = 1;
+    if(strlen(stringOne) == strlen(stringTwo)){
+        for(int i = 0; i <= strlen(stringTwo); i++){
+			char a = *(stringOne + i);
+			char b = *(stringTwo + i);
+			if
+
+            if(*(stringOne + i) != *(stringTwo + i)){
+                test = 0;
+                break;
+            }
+
+        }
+    }else{
+        test = 0;
+    }
+
+    if (test){
+        printf("Complex true\n");
+    }else{
+        printf("Complex false\n");
+    }
+    return test;
 
 }
