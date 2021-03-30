@@ -16,10 +16,10 @@ void searchPuzzle(char** arr, int n, char** list, int listSize);
 int compareString(char* stringOne, char* stringTwo);
 
 void horizontalLeftSweep(char** arr, char** list , char* currentLine, int row,int listSize);
-// int horizontalLeftSweep(char** list, char* target, int size);
+
 // int verticalUpSweep(char** list, char* target, int size);
 void verticalDownSweep(char** arr, char** list, int row, int col, int listSize);
-
+//
 
 
 // Main function, DO NOT MODIFY (except line 52 if your output is not as expected -- see the comment there)!!!	
@@ -215,8 +215,10 @@ void verticalDownSweep(char** arr, char** list, int row, int col, int listSize){
 		long size = n - j;
 		temp = (char *)malloc(size * sizeof(char));
 		// printf("Size vertically: %ld\n", size);
-		for(k = row; k < size; k++){
-			*(temp + k) = *(*(arr + k) + col);
+		for(k = 0; k < size; k++){
+			*(temp + k) = *(*(arr + row + k) + col);
+			// *(temp + k) = *(*(arr + j + k) + col);
+			
 		}
 		*(temp + k) = '\0';
 		// printf("Vertical string of (%ld, %d): %s\n", j, col, temp);
