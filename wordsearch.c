@@ -15,10 +15,10 @@ void searchPuzzle(char** arr, int n, char** list, int listSize);
 
 int compareString(char* stringOne, char* stringTwo);
 
-int horizontalRightSweep(char** list, char* target, int size);
-int horizontalLeftSweep(char** list, char* target, int size);
-int verticalUpSweep(char** list, char* target, int size);
-int verticalDownSweep(char** list, char* target, int size);
+void horizontalLeftSweep(char** arr, char** list , char* currentLine, int row,int listSize);
+// int horizontalLeftSweep(char** list, char* target, int size);
+// int verticalUpSweep(char** list, char* target, int size);
+void verticalDownSweep(char** arr, char** list, int row, int col, int listSize);
 
 
 
@@ -124,34 +124,14 @@ void searchPuzzle(char** arr, int n, char** list, int listSize) {
 			char* temp;
 			temp = (*(arr + o) + i);
 			// printf("Result of temp with lengh(%ld): %s\n", strlen(temp),temp);
-
-			for(j = 0; j < strlen(temp); j++){
-				char *tempTwo;
-				long size = strlen(temp) - j;
-
-				tempTwo = (char*)malloc(size * sizeof(char));
-				// tempTwo = (char*)malloc((size-1) * sizeof(char));
-
-
-				for(k = 0; k < size; k++){
-					*(tempTwo + k) = *(temp + k);
-				}
-				*(tempTwo + k) = '\0';
-				// printf("String of second temp: %s\n", (tempTwo));
-				
-				int p;
-				for(p = 0; p < listSize; p++){
-					if(compareString(tempTwo,*(list + p))){
-						printf("Word found: %s\n", tempTwo);
-					}
-				}
-				
-				// printf("Size of second temp: %ld\n", strlen(tempTwo));
-
-			}
+			char *tempTwo;
+			horizontalLeftSweep(arr, list, temp,o,listSize);
+			verticalDownSweep(arr, list, o, i, listSize);
+			
 
 		}
 	}
+	// verticalDownSweep(arr, list, 0, 0, listSize);
 
 
 
@@ -191,9 +171,67 @@ int compareString(char* stringOne, char* stringTwo){
 
 
 
-int horizontalLeftSweep(char** list, char* target, int size){
+void horizontalLeftSweep(char** arr, char** list , char* currentLine, int row, int listSize){
+	int j;
+	int k;
+	char *tempTwo;
+	for(j = 0; j < strlen(currentLine); j++){
+		// char *tempTwo;
+		long size = strlen(currentLine) - j;
+		tempTwo = (char*)malloc(size * sizeof(char));
+		// tempTwo = (char*)malloc((size-1) * sizeof(char));
 
 
+		for(k = 0; k < size; k++){
+			*(tempTwo + k) = *(currentLine + k);
+		}
+		*(tempTwo + k) = '\0';
+		// printf("String of second temp: %s\n", (tempTwo));
+			
+		int p;
+		for(p = 0; p < listSize; p++){
+			if(compareString(tempTwo,*(list + p))){
+				printf("Word found: %s\n", tempTwo);
+			}
+		}
+				
+		// printf("Size of second temp: %ld\n", strlen(tempTwo));
+
+	}
+
+}
+
+void verticalDownSweep(char** arr, char** list, int row, int col, int listSize){
 
 	
+	char* temp;
+	long n = strlen(*(arr + 0));
+	// printf("Dimension: %ldx%ld\n", n,n);
+	long j;
+	long k;
+	// printf("(Row, Col): (%d, %d)\n", row, col);
+
+	for(j = row; j < n; j++){
+		long size = n - j;
+		temp = (char *)malloc(size * sizeof(char));
+		// printf("Size vertically: %ld\n", size);
+		for(k = row; k < size; k++){
+			*(temp + k) = *(*(arr + k) + col);
+		}
+		*(temp + k) = '\0';
+		// printf("Vertical string of (%ld, %d): %s\n", j, col, temp);
+
+		int p;
+		for(p = 0; p < listSize; p++){
+			if(compareString(temp,*(list + p))){
+				printf("Word found: %s\n", temp);
+			}
+		}
+
+	}
+
+	// for(j = row;)
+
+
+
 }
