@@ -95,6 +95,7 @@ void printPuzzle(char** arr, int n) {
 	// This function will print out the complete puzzle grid (arr). It must produce the output in the SAME format as the samples in the instructions.
 	// Your implementation here
 	int i;
+	
 	int j;
 
 	for(i = 0; i < n; i++){
@@ -113,39 +114,43 @@ void searchPuzzle(char** arr, int n, char** list, int listSize) {
 	long i;
 	long j;
 	long k;
+	long o;
 
 	char **listOfWordsFound = (char **)malloc(listSize * sizeof(char)); 
+	// printf("List size: %d\n", listSize);
+	for(o = 0; o < n; o++){
+		for(i = 0; i < n; i++){
+			// char* temp = (char *)malloc ((n-i) * sizeof(char));
+			char* temp;
+			temp = (*(arr + o) + i);
+			// printf("Result of temp with lengh(%ld): %s\n", strlen(temp),temp);
 
-	for(i = 0; i < n; i++){
-		// char* temp = (char *)malloc ((n-i) * sizeof(char));
-		char* temp;
-		temp = (*(arr + 14) + i);
-		printf("Result of temp with lengh(%ld): %s\n", strlen(temp),temp);
+			for(j = 0; j < strlen(temp); j++){
+				char *tempTwo;
+				long size = strlen(temp) - j;
 
-		for(j = 0; j < strlen(temp); j++){
-			char *tempTwo;
-			long size = strlen(temp) - j;
-
-			tempTwo = (char*)malloc(size * sizeof(char));
-			// tempTwo = (char*)malloc((size-1) * sizeof(char));
+				tempTwo = (char*)malloc(size * sizeof(char));
+				// tempTwo = (char*)malloc((size-1) * sizeof(char));
 
 
-			for(k = 0; k < size; k++){
-				*(tempTwo + k) = *(temp + k);
+				for(k = 0; k < size; k++){
+					*(tempTwo + k) = *(temp + k);
+				}
+				*(tempTwo + k) = '\0';
+				// printf("String of second temp: %s\n", (tempTwo));
+				
+				int p;
+				for(p = 0; p < listSize; p++){
+					if(compareString(tempTwo,*(list + p))){
+						printf("Word found: %s\n", tempTwo);
+					}
+				}
+				
+				// printf("Size of second temp: %ld\n", strlen(tempTwo));
+
 			}
-			*(tempTwo + k) = '\0';
-			compareString(tempTwo,"florida");
-			// for(i = 0; i < (long)(listSize); i++){
-			// 	if(compareString(tempTwo,*(list + i))){
-			// 		// printf("Word found: %s", tempTwo);
-			// 	}
-			// }
-			
-			printf("String of second temp: %s\n", (tempTwo));
-			// printf("Size of second temp: %ld\n", strlen(tempTwo));
 
 		}
-
 	}
 
 
@@ -158,28 +163,37 @@ int compareString(char* stringOne, char* stringTwo){
     // printf("String Two of length(%ld): %s\n", strlen(stringTwo),stringTwo);
 
 	
-	int test = 1;
+	int equalToEachOther = 1;			// true = 1; false = 0;
     if(strlen(stringOne) == strlen(stringTwo)){
         for(int i = 0; i <= strlen(stringTwo); i++){
 			char a = *(stringOne + i);
 			char b = *(stringTwo + i);
-			if
+			if(a >= 'a' && a <= 'z'){				//checks if the current char for stringOne is lowercase
+				a = a+ ('A'-'a');				// 'A' = 65; 'Z' = 90;, 'a' = '97';
+			}
+			if(b >= 'a' && b <= 'z'){				//checks if the current char for stringTwo is lowercase
+				b = b+ ('A'-'a');
+			}
 
-            if(*(stringOne + i) != *(stringTwo + i)){
-                test = 0;
+            if(a != b){
+
+                equalToEachOther = 0;
                 break;
             }
 
         }
     }else{
-        test = 0;
+        equalToEachOther = 0;
     }
+    return equalToEachOther;
 
-    if (test){
-        printf("Complex true\n");
-    }else{
-        printf("Complex false\n");
-    }
-    return test;
+}
 
+
+
+int horizontalLeftSweep(char** list, char* target, int size){
+
+
+
+	
 }
