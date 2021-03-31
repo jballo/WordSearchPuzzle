@@ -19,7 +19,7 @@ void horizontalLeftSweep(char** arr, char** list , char* currentLine, int row,in
 
 // int verticalUpSweep(char** list, char* target, int size);
 void verticalDownSweep(char** arr, char** list, int row, int col, int listSize);
-//
+void diagTopLeftToBottom(char** arr, char** list, int row, int col, in listSize);
 
 
 // Main function, DO NOT MODIFY (except line 52 if your output is not as expected -- see the comment there)!!!	
@@ -127,6 +127,7 @@ void searchPuzzle(char** arr, int n, char** list, int listSize) {
 			char *tempTwo;
 			horizontalLeftSweep(arr, list, temp,o,listSize);
 			verticalDownSweep(arr, list, o, i, listSize);
+			diagTopLeftToBottom(arr, list, o, i, listSize);
 			
 
 		}
@@ -234,6 +235,19 @@ void verticalDownSweep(char** arr, char** list, int row, int col, int listSize){
 
 	// for(j = row;)
 
+
+
+}
+
+void diagTopLeftToBottom(char** arr, char** list, int row, int col, in listSize){
+	
+	int rowPos = row;
+	int colPos = col;
+
+
+	while( rowPs != 15 && colPos != 15){
+		
+	}
 
 
 }
