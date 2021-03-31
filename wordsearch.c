@@ -19,7 +19,7 @@ void horizontalLeftSweep(char** arr, char** list , char* currentLine, int row,in
 
 // int verticalUpSweep(char** list, char* target, int size);
 void verticalDownSweep(char** arr, char** list, int row, int col, int listSize);
-void diagTopLeftToBottom(char** arr, char** list, int row, int col, in listSize);
+void diagTopLeftToBottom(char** arr, char** list, int row, int col, int listSize);
 
 
 // Main function, DO NOT MODIFY (except line 52 if your output is not as expected -- see the comment there)!!!	
@@ -239,15 +239,48 @@ void verticalDownSweep(char** arr, char** list, int row, int col, int listSize){
 
 }
 
-void diagTopLeftToBottom(char** arr, char** list, int row, int col, in listSize){
+void diagTopLeftToBottom(char** arr, char** list, int row, int col, int listSize){
 	
 	int rowPos = row;
 	int colPos = col;
 
+	int length = 0;
 
-	while( rowPs != 15 && colPos != 15){
-		
+	while( rowPos != 15 && colPos != 15){
+		length++;
+		rowPos++;
+		colPos++;	
 	}
+	// printf("Diagonal length: %d\n", length);
+
+	// int idk = length;
+
+	char* temp;
+	int i;
+	int k;
+
+	for(i = length; i > 0; i--){
+		temp = (char *)malloc(length * sizeof(char));
+		for(k = 0; k < length; k++){
+			*(temp + k) = *(*(arr + row + k) + col + k);
+		}
+		*(temp +k) = '\0';
+		// printf("String of current diagonal: %s\n", temp);
+
+		int p;
+		for(p = 0; p < listSize; p++){
+			if(compareString(temp,*(list + p))){
+				printf("Word found: %s\n", temp);
+			}
+		}
+
+		length--;
+	} 
+	
+	
+
+	
+
 
 
 }
