@@ -3,11 +3,6 @@
 #include <string.h>
 
 
-//Own personal using C++ structures
-// #include <LinkedList.h>
-#include "HashTable.c"
-////////////////////////////////////
-
 // Declarations of the two functions you will implement
 // Feel free to declare any helper functions
 void printPuzzle(char** arr, int n);
@@ -16,8 +11,6 @@ void searchPuzzle(char** arr, int n, char** list, int listSize);
 int compareString(char* stringOne, char* stringTwo);
 
 void horizontalLeftSweep(char** arr, char** list , char* currentLine, int row,int listSize);
-
-// int verticalUpSweep(char** list, char* target, int size);
 void verticalDownSweep(char** arr, char** list, int row, int col, int listSize);
 void diagTopLeftToBottom(char** arr, char** list, int row, int col, int listSize);
 
@@ -51,6 +44,7 @@ int main(int argc, char **argv) {
 
 	// Open file for reading word list
 	fptr = fopen("states.txt", "r");
+
 	if (fptr == NULL) {
         printf("Cannot Open Words File!\n");
         return 0;
@@ -94,13 +88,12 @@ int main(int argc, char **argv) {
 void printPuzzle(char** arr, int n) {
 	// This function will print out the complete puzzle grid (arr). It must produce the output in the SAME format as the samples in the instructions.
 	// Your implementation here
-	int i;
-	
-	int j;
+	int row;
+	int col;
 
-	for(i = 0; i < n; i++){
-		for(j = 0; j < n; j++){
-			printf("%c ", *(*(arr + i) + j));
+	for(row = 0; row < n; row++){					//Will increment each time the start of the next array of char
+		for(col = 0; col < n; col++){				// Will incremeent through every character of the string for the current row
+			printf("%c ", *(*(arr + row) + col));
 		}
 		printf("\n");
 	}
@@ -111,28 +104,26 @@ void printPuzzle(char** arr, int n) {
 void searchPuzzle(char** arr, int n, char** list, int listSize) {
 	// This function checks if arr contains words from list. If a word appears in arr, it will print out that word and then convert that word entry in arr into lower case.
 	// Your implementation here
-	long i;
-	long j;
-	long k;
-	long o;
+	long row;
+	long col;
 
 	char **listOfWordsFound = (char **)malloc(listSize * sizeof(char)); 
 	// printf("List size: %d\n", listSize);
-	for(o = 0; o < n; o++){
-		for(i = 0; i < n; i++){
-			// char* temp = (char *)malloc ((n-i) * sizeof(char));
+	for(row = 0; row < n; row++){
+		for(col = 0; col < n; col++){
 			char* temp;
-			temp = (*(arr + o) + i);
+			temp = (*(arr + row) + col);
 			// printf("Result of temp with lengh(%ld): %s\n", strlen(temp),temp);
 			char *tempTwo;
-			horizontalLeftSweep(arr, list, temp,o,listSize);
-			verticalDownSweep(arr, list, o, i, listSize);
-			diagTopLeftToBottom(arr, list, o, i, listSize);
+
+			//From the current (row,col) (or (x,y)) position, we can then start the search for letters in all five directions from the current place.
+			horizontalLeftSweep(arr, list, temp,row,listSize);			// From (x,y) position, we look to the right
+			verticalDownSweep(arr, list, row, col, listSize);			// From (x,y) position, we look down
+			diagTopLeftToBottom(arr, list, row, col, listSize);			// From (x,y) position, we look diagonally from top left to bottom right
 			
 
 		}
 	}
-	// verticalDownSweep(arr, list, 0, 0, listSize);
 
 
 
@@ -140,19 +131,16 @@ void searchPuzzle(char** arr, int n, char** list, int listSize) {
 
 
 int compareString(char* stringOne, char* stringTwo){
-    // printf("String One of length(%ld): %s\n", strlen(stringOne),stringOne);
-    // printf("String Two of length(%ld): %s\n", strlen(stringTwo),stringTwo);
-
 	
 	int equalToEachOther = 1;			// true = 1; false = 0;
     if(strlen(stringOne) == strlen(stringTwo)){
         for(int i = 0; i <= strlen(stringTwo); i++){
-			char a = *(stringOne + i);
-			char b = *(stringTwo + i);
-			if(a >= 'a' && a <= 'z'){				//checks if the current char for stringOne is lowercase
-				a = a+ ('A'-'a');				// 'A' = 65; 'Z' = 90;, 'a' = '97';
+			char a = *(stringOne + i);					// saves our current character for string one into a temporary variable
+			char b = *(stringTwo + i);					// save our current character for string two into a temporary variable
+			if(a >= 'a' && a <= 'z'){					//checks if the current char for stringOne is lowercase
+				a = a+ ('A'-'a');						// 'A' = 65; 'Z' = 90;, 'a' = '97';
 			}
-			if(b >= 'a' && b <= 'z'){				//checks if the current char for stringTwo is lowercase
+			if(b >= 'a' && b <= 'z'){					//checks if the current char for stringTwo is lowercase
 				b = b+ ('A'-'a');
 			}
 
@@ -175,28 +163,25 @@ int compareString(char* stringOne, char* stringTwo){
 void horizontalLeftSweep(char** arr, char** list , char* currentLine, int row, int listSize){
 	int j;
 	int k;
-	char *tempTwo;
-	for(j = 0; j < strlen(currentLine); j++){
-		// char *tempTwo;
+	char *currentWord;									//This will hold the word the program creates after each loop to compare to a word in listgiven
+
+
+	for(j = 0; j < strlen(currentLine); j++){			//This loop will let us know how much to decrement the string by for the next comparison
 		long size = strlen(currentLine) - j;
-		tempTwo = (char*)malloc(size * sizeof(char));
-		// tempTwo = (char*)malloc((size-1) * sizeof(char));
+		currentWord = (char*)malloc(size * sizeof(char));
 
 
 		for(k = 0; k < size; k++){
-			*(tempTwo + k) = *(currentLine + k);
+			*(currentWord + k) = *(currentLine + k);	//Where I fill the word we created (aka currentWord)
 		}
-		*(tempTwo + k) = '\0';
-		// printf("String of second temp: %s\n", (tempTwo));
+		*(currentWord + k) = '\0';							//Null character added to prevent weird output
 			
-		int p;
-		for(p = 0; p < listSize; p++){
-			if(compareString(tempTwo,*(list + p))){
-				printf("Word found: %s\n", tempTwo);
+		int listIndex;
+		for(listIndex = 0; listIndex < listSize; listIndex++){
+			if(compareString(currentWord,*(list + listIndex))){
+				printf("Word found: %s\n", *(list + listIndex));
 			}
 		}
-				
-		// printf("Size of second temp: %ld\n", strlen(tempTwo));
 
 	}
 
@@ -205,38 +190,29 @@ void horizontalLeftSweep(char** arr, char** list , char* currentLine, int row, i
 void verticalDownSweep(char** arr, char** list, int row, int col, int listSize){
 
 	
-	char* temp;
-	long n = strlen(*(arr + 0));
-	// printf("Dimension: %ldx%ld\n", n,n);
+	char* currentWord;
+	long n = strlen(*(arr + 0));						// Note: Dimension of 2D array of char is: n x n
 	long j;
 	long k;
 	// printf("(Row, Col): (%d, %d)\n", row, col);
 
 	for(j = row; j < n; j++){
-		long size = n - j;
-		temp = (char *)malloc(size * sizeof(char));
-		// printf("Size vertically: %ld\n", size);
-		for(k = 0; k < size; k++){
-			*(temp + k) = *(*(arr + row + k) + col);
-			// *(temp + k) = *(*(arr + j + k) + col);
-			
-		}
-		*(temp + k) = '\0';
-		// printf("Vertical string of (%ld, %d): %s\n", j, col, temp);
+		
+		long size = n - j;								//calculates the size based on the size of the 2D array - vertical positon/row 
+		currentWord = (char *)malloc(size * sizeof(char));
 
-		int p;
-		for(p = 0; p < listSize; p++){
-			if(compareString(temp,*(list + p))){
-				printf("Word found: %s\n", temp);
+		for(k = 0; k < size; k++){
+			*(currentWord + k) = *(*(arr + row + k) + col);	//Where I fill the word we created (aka currentWord)
+		}
+		*(currentWord + k) = '\0';						//Null character added to prevent weird output
+
+		int listIndex;
+		for(listIndex = 0; listIndex < listSize; listIndex++){
+			if(compareString(currentWord,*(list + listIndex))){
+				printf("Word found: %s\n", *(list + listIndex));
 			}
 		}
-
 	}
-
-	// for(j = row;)
-
-
-
 }
 
 void diagTopLeftToBottom(char** arr, char** list, int row, int col, int listSize){
@@ -246,41 +222,30 @@ void diagTopLeftToBottom(char** arr, char** list, int row, int col, int listSize
 
 	int length = 0;
 
-	while( rowPos != 15 && colPos != 15){
+	while( rowPos != 15 && colPos != 15){		//Finds the length of the new string based on incrementing row and col until we hit the edge of the 2D array
 		length++;
 		rowPos++;
 		colPos++;	
 	}
-	// printf("Diagonal length: %d\n", length);
 
-	// int idk = length;
-
-	char* temp;
+	char* currentWord;									//Temporary string to compare to any words in the word bank
 	int i;
 	int k;
 
 	for(i = length; i > 0; i--){
-		temp = (char *)malloc(length * sizeof(char));
+		currentWord = (char *)malloc(length * sizeof(char));
 		for(k = 0; k < length; k++){
-			*(temp + k) = *(*(arr + row + k) + col + k);
+			*(currentWord + k) = *(*(arr + row + k) + col + k);	//Where I fill the word we created (aka currentWord)
 		}
-		*(temp +k) = '\0';
-		// printf("String of current diagonal: %s\n", temp);
+		*(currentWord +k) = '\0';						//Null character added to prevent weird output
 
-		int p;
-		for(p = 0; p < listSize; p++){
-			if(compareString(temp,*(list + p))){
-				printf("Word found: %s\n", temp);
+		int listIndex;
+		for(listIndex = 0; listIndex < listSize; listIndex++){					//Loops through the list of words to compare to our current word
+			if(compareString(currentWord,*(list + listIndex))){
+				printf("Word found: %s\n", *(list + listIndex));
 			}
 		}
 
-		length--;
-	} 
-	
-	
-
-	
-
-
-
+		length--;										//Subtracts the length to make it smaller each repetition.
+	}
 }
