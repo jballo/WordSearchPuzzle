@@ -3,6 +3,7 @@
 #include <string.h>
 
 
+
 // Declarations of the two functions you will implement
 // Feel free to declare any helper functions
 void printPuzzle(char** arr, int n);
@@ -11,9 +12,12 @@ void searchPuzzle(char** arr, int n, char** list, int listSize);
 int compareString(char* stringOne, char* stringTwo);
 
 void horizontalLeftSweep(char** arr, char** list , char* currentLine, int row,int listSize);
-void verticalDownSweep(char** arr, char** list, int row, int col, int listSize);
-void diagTopLeftToBottom(char** arr, char** list, int row, int col, int listSize);
 
+void verticalDownSweep(char** arr, char** list, int row, int col, int listSize);
+void verticalTopSweep(char** arr, char** list, int row, int col, int listSize);
+
+void diagTopLeftToBottom(char** arr, char** list, int row, int col, int listSize);
+void diagBotLeftToTopRight(char** arr, char** list, int row, int col, int listSize);
 
 // Main function, DO NOT MODIFY (except line 52 if your output is not as expected -- see the comment there)!!!	
 int main(int argc, char **argv) {
@@ -115,18 +119,18 @@ void searchPuzzle(char** arr, int n, char** list, int listSize) {
 			temp = (*(arr + row) + col);
 			// printf("Result of temp with lengh(%ld): %s\n", strlen(temp),temp);
 			char *tempTwo;
+			// printf("Current (x,y) position: (%ld, %ld)\n", row,col);
 
 			//From the current (row,col) (or (x,y)) position, we can then start the search for letters in all five directions from the current place.
 			horizontalLeftSweep(arr, list, temp,row,listSize);			// From (x,y) position, we look to the right
 			verticalDownSweep(arr, list, row, col, listSize);			// From (x,y) position, we look down
-			diagTopLeftToBottom(arr, list, row, col, listSize);			// From (x,y) position, we look diagonally from top left to bottom right
+			verticalTopSweep(arr, list, row, col, listSize);			// From (x,y) position, we look down
 			
-
+			diagTopLeftToBottom(arr, list, row, col, listSize);			// From (x,y) position, we look diagonally from top left to bottom right
+			diagBotLeftToTopRight(arr, list, row, col, listSize);		// From (x,y) position, we look diagonally from bottom left to rop right
+			
 		}
 	}
-
-
-
 }
 
 
@@ -187,6 +191,38 @@ void horizontalLeftSweep(char** arr, char** list , char* currentLine, int row, i
 
 }
 
+
+void verticalTopSweep(char** arr, char** list, int row, int col, int listSize){
+	char* currentWord;
+	long n = strlen(*(arr + 0));						// Note: Dimension of 2D array of char is: n x n
+	long j;
+	long k;
+	// printf("(Row, Col): (%d, %d)\n", row, col);
+	// long size = row+1;
+	// printf(" Biggest size: %ld\n", size);
+	for(j = row; j >= 0; j--){
+		long size = row+1 - j;
+		// printf("Current size: %ld\n", size);
+		currentWord = (char *)malloc(size * sizeof(char));
+
+		for(k = 0; k < size; k++){
+			*(currentWord + k) = *(*(arr + row - k) + col);
+		}
+		*(currentWord + k) = '\0';
+		// printf("Current word: %s\n", currentWord);
+
+		int listIndex;
+		for(listIndex = 0; listIndex < listSize; listIndex++){
+			if(compareString(currentWord,*(list + listIndex))){
+				printf("Word found: %s\n", *(list + listIndex));
+			}
+		}
+
+
+	}
+
+}
+
 void verticalDownSweep(char** arr, char** list, int row, int col, int listSize){
 
 	
@@ -215,6 +251,7 @@ void verticalDownSweep(char** arr, char** list, int row, int col, int listSize){
 	}
 }
 
+
 void diagTopLeftToBottom(char** arr, char** list, int row, int col, int listSize){
 	
 	int rowPos = row;
@@ -227,6 +264,7 @@ void diagTopLeftToBottom(char** arr, char** list, int row, int col, int listSize
 		rowPos++;
 		colPos++;	
 	}
+	// printf("Current word length: %d", length);
 
 	char* currentWord;									//Temporary string to compare to any words in the word bank
 	int i;
@@ -248,4 +286,41 @@ void diagTopLeftToBottom(char** arr, char** list, int row, int col, int listSize
 
 		length--;										//Subtracts the length to make it smaller each repetition.
 	}
+}
+
+void diagBotLeftToTopRight(char** arr, char** list, int row, int col, int listSize){
+
+	int rowPos = row;
+	int colPos = col;
+
+	int length = 0;
+
+	while( rowPos > -1 && colPos != 15){
+		length++;
+		rowPos--;
+		colPos++;
+	}
+	char* currentWord;									//Temporary string to compare to any words in the word bank
+	int i;
+	int k;
+	
+
+	for(i = length; i > 0; i--){
+		currentWord = (char *)malloc(length * sizeof(char));
+		for(k = 0; k < i; k++){
+			*(currentWord + k) = *(*(arr + row - k) + col + k);
+		}
+		*(currentWord + k) = '\0';						//Null character added to prevent weird output
+
+		// printf("Current diagonal word: %s\n", currentWord);
+		int listIndex;
+		for(listIndex = 0; listIndex < listSize; listIndex++){					//Loops through the list of words to compare to our current word
+			if(compareString(currentWord,*(list + listIndex))){
+				printf("Word found: %s\n", *(list + listIndex));
+			}
+		}
+
+		length--;
+	}
+
 }
